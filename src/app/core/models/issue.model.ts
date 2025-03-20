@@ -5,6 +5,14 @@ import { GithubLabel } from './github/github-label.model';
 import { HiddenData } from './hidden-data.model';
 import { Milestone } from './milestone.model';
 
+export const ReviewDecision = {
+  CHANGES_REQUESTED: 'CHANGES_REQUESTED',
+  APPROVED: 'APPROVED',
+  REVIEW_REQUIRED: 'REVIEW_REQUIRED'
+};
+
+export type ReviewDecisionType = typeof ReviewDecision[keyof typeof ReviewDecision];
+
 export class Issue {
   /** Basic Fields */
   readonly globalId: string;
@@ -28,6 +36,8 @@ export class Issue {
   assignees?: string[];
   labels?: string[];
   githubLabels?: GithubLabel[];
+  reviewers?: string[];
+  reviewDecision?: ReviewDecisionType | null;
 
   /**
    * Formats the text to create space at the end of the user input to prevent any issues with
@@ -88,6 +98,7 @@ export class Issue {
     this.author = githubIssue.user.login;
     // this.githubIssue = githubIssue;
     this.isDraft = githubIssue.isDraft;
+    this.reviewDecision = githubIssue.reviewDecision;
 
     this.assignees = githubIssue.assignees.map((assignee) => assignee.login);
     this.githubLabels = githubIssue.labels;
